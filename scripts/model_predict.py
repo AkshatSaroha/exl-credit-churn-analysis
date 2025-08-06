@@ -42,22 +42,32 @@ with open('../model/churn_model.pkl', 'rb') as f:
 
 predictions = model.predict(X_processed)
 
-# Create table if not exists 
-cursor = conn.cursor()
-cursor.execute("""
-    CREATE TABLE IF NOT EXISTS churn_predictions (
-        CustomerID VARCHAR(20),
-        Churn_Prediction INT
-    )
-""")
-conn.commit()
+# Create predictions DataFrame for CSV export
+predictions_df = pd.DataFrame({
+    'CustomerID': original_ids,
+    'Churn_Prediction': predictions
+})
 
-# insert into prediction
-for cid, pred in zip(original_ids, predictions):
-    cursor.execute("REPLACE INTO churn_predictions (CustomerID, Churn_Prediction) VALUES (%s, %s)", (cid, int(pred)))
 
-conn.commit()
-cursor.close()
-conn.close()
+# csv_filename = os.path.join(output_dir, 'churn_predictions.csv')
+predictions_df.to_csv('../data/processed/churn_prediction.csv', index=False)
+
+# # Create table if not exists 
+# cursor = conn.cursor()
+# cursor.execute("""
+#     CREATE TABLE IF NOT EXISTS churn_predictions (
+#         CustomerID VARCHAR(20),
+#         Churn_Prediction INT
+#     )
+# """)
+# conn.commit()
+
+# # insert into prediction
+# for cid, pred in zip(original_ids, predictions):
+#     cursor.execute("REPLACE INTO churn_predictions (CustomerID, Churn_Prediction) VALUES (%s, %s)", (cid, int(pred)))
+
+# conn.commit()
+# cursor.close()
+# conn.close()
 
 print("Predictions stored successfully in churn_predictions table.")
