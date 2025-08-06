@@ -1,0 +1,13 @@
+Model: Random Forest
+Accuracy: 0.7100
+Precision: 0.4730
+Recall: 0.4769
+F1 score: 0.4741
+Confusion Matrix:
+[[76 33  0]
+ [24 66  0]
+ [ 1  0  0]]
+Top 3 Important Features:
+IsActiveMember    0.392623
+Tenure            0.245021
+Balance           0.120296
